@@ -45,6 +45,10 @@ jobs:
         run: bundle exec jekyll build -d "_site" --baseurl ""
         env:
           JEKYLL_ENV: "production"
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_site"
 
       # 暂时禁用 htmlproofer 检查，避免因缺失资源导致构建失败
       # 等你上传完头像、favicon 等资源后，可以取消下面几行的注释
