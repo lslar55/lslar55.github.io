@@ -40,9 +40,9 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true
 
-      # 构建站点到 _site 目录，强制 baseurl 为空（根路径）
+      # 构建站点到 _site 目录，使用 _config.yml 中的 baseurl 配置
       - name: Build site
-        run: bundle exec jekyll build -d "_site" --baseurl ""
+        run: bundle exec jekyll build -d "_site"
         env:
           JEKYLL_ENV: "production"
 
@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: "_site"
-          name: github-pages-${{ github.run_id }}  # 使用运行ID确保唯一
+          name: github-pages-${{ github.run_id }}
 
   deploy:
     environment:
@@ -64,4 +64,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: github-pages-${{ github.run_id }}  # 与上传名称一致
+          artifact_name: github-pages-${{ github.run_id }}
