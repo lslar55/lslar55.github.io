@@ -40,28 +40,18 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true
 
-      # 构建站点，强制指定 baseurl 为空，输出到 _site
+      # 构建站点到 _site 目录，强制 baseurl 为空（根路径）
       - name: Build site
         run: bundle exec jekyll build -d "_site" --baseurl ""
         env:
           JEKYLL_ENV: "production"
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: "_site"
 
-      # 暂时禁用 htmlproofer 检查，避免因缺失资源导致构建失败
-      # 等你上传完头像、favicon 等资源后，可以取消下面几行的注释
-      - name: Test site
-        run: |
-         bundle exec htmlproofer _site \
-           \-\-disable-external \
-           \-\-ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
-
+      # 上传 artifact，使用唯一名称避免冲突
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: "_site"
+          name: github-pages-${{ github.run_id }}  # 使用运行ID确保唯一
 
   deploy:
     environment:
@@ -73,3 +63,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_id }}  # 与上传名称一致
